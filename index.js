@@ -9,22 +9,8 @@ dotenv.config();
 const app = express()
 const bot = new TelegramBot(process.env.TOKEN_BOT, { polling: true });
 let oldAnime = [];
-const chatID = []
-
-const job = new CronJob('0 * * * * *', getNewAnime, null, true, 'Asia/Jakarta');
-
-bot.on("message", (msg) => {
-    if (msg.text === "/start") {
-        const id = msg.chat.id
-        bot.sendMessage(id, `Selamat datang ${msg.chat.first_name} saya akan memberikan update anime setiap 1 hari sekali`)
-        const checkId = chatID.filter((chat) => chat == id);
-        if (checkId.length == 0) {
-            chatID.push(id)
-            console.log(`New user ${id}`)
-        }
-    }
-})
-
+const chatID = [];
+let server = false;
 
 async function getNewAnime() {
     const response = await axios.get("https://web-anime-psi.vercel.app/anime?page=1&type=ongoing");
@@ -44,6 +30,23 @@ https://animan.fun/anime/${anime.slug}
     })
 }
 
-app.get("/", (req, res) => res.json("Server on"));
+app.get("/", (req, res) => {
+    if(!server){
+        const job = new CronJob('0 * * * * *', getNewAnime, null, true, 'Asia/Jakarta');
+        bot.on("message", (msg) => {
+            if (msg.text === "/start") {
+                const id = msg.chat.id
+                bot.sendMessage(id, `Selamat datang ${msg.chat.first_name} saya akan memberikan update anime setiap 1 hari sekali`)
+                const checkId = chatID.filter((chat) => chat == id);
+                if (checkId.length == 0) {
+                    chatID.push(id)
+                    console.log(`New user ${id}`)
+                }
+            }
+        })
+        server = true;
+    }
+    res.json("server on");
+});
 app.listen(5000, () => console.log("Server Nyala"));
 
