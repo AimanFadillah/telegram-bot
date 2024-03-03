@@ -2,11 +2,9 @@ import TelegramBot from "node-telegram-bot-api"
 import axios from "axios";
 import { CronJob } from "cron"
 import dotenv from "dotenv"
-import express from "express";
 
 dotenv.config();
 
-const app = express()
 const bot = new TelegramBot(process.env.TOKEN_BOT, { polling: true });
 let oldAnime = [];
 const chatID = [];
@@ -30,9 +28,7 @@ https://animan.fun/anime/${anime.slug}
     })
 }
 
-app.get("/", (req, res) => {
-    if(!server){
-        const job = new CronJob('0 0 0 * * *', getNewAnime, null, true, 'Asia/Jakarta');
+const job = new CronJob('0 0 0 * * *', getNewAnime, null, true, 'Asia/Jakarta');
         bot.on("message", (msg) => {
             if (msg.text === "/start") {
                 const id = msg.chat.id
@@ -45,8 +41,5 @@ app.get("/", (req, res) => {
             }
         })
         server = true;
-    }
-    res.json(`server on ${server}`);
-});
-app.listen(5000, () => console.log("Server Nyala"));
+
 
