@@ -32,7 +32,7 @@ https://animan.fun/anime/${anime.slug}
 
 app.get("/", (req, res) => {
     if(!server){
-        const job = new CronJob('0 * * * * *', getNewAnime, null, true, 'Asia/Jakarta');
+        const job = new CronJob('0 0 0 * * *', getNewAnime, null, true, 'Asia/Jakarta');
         bot.on("message", (msg) => {
             if (msg.text === "/start") {
                 const id = msg.chat.id
