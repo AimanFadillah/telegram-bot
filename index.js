@@ -46,7 +46,7 @@ app.get("/", (req, res) => {
         })
         server = true;
     }
-    res.json("server on");
+    res.json(`server on ${server}`);
 });
 app.listen(5000, () => console.log("Server Nyala"));
 
