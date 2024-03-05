@@ -2,9 +2,11 @@ import TelegramBot from "node-telegram-bot-api"
 import axios from "axios";
 import { CronJob } from "cron"
 import dotenv from "dotenv"
+import express from "express"
 
 dotenv.config();
 
+const app = express();
 const bot = new TelegramBot(process.env.TOKEN_BOT, { polling: true });
 let oldAnime = [];
 const chatID = [];
@@ -39,7 +41,13 @@ const job = new CronJob('0 0 0 * * *', getNewAnime, null, true, 'Asia/Jakarta');
                     console.log(`New user ${id}`)
                 }
             }
-        })
-        server = true;
+})
 
+app.get("*",(req,res) => {
+    return res.json("success");
+})
+
+app.listen(8000,() => {
+    console.log("Server on port 8000")
+})
 
