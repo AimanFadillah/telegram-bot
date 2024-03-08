@@ -20,9 +20,8 @@ async function getNewAnime() {
         for(const old of oldAnime){
             newAnime = newAnime.filter((anime) => anime.slug !== old.slug);
         }
-    }else{
-        oldAnime = newAnime
     }
+    oldAnime = response.data.reverse();
     chatID.forEach((id) => {
         newAnime.forEach((anime) => {
             bot.sendPhoto(id, `https://mangapi-man.vercel.app/gambar?url=${anime.gambar}`, {
